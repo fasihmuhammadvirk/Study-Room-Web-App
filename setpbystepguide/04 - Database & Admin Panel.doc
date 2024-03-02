@@ -83,3 +83,5 @@ then from .models import Room or anther model you want to use
 then we can use that model in our view  function
 like 
 rooms = Room.objects.all() , it will get all the data items in the Room model
+rooms = Room.objects.get(id=pk), it will get the selected room from the database with the id
+
