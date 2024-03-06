@@ -1,0 +1,18 @@
+{
+	"folders": [
+		{
+			"path": "../.."
+		},
+		{
+			"path": "../../../../../Downloads/StudyBud-master/theme"
+		}
+	],
+	"settings": {
+		"workbench.colorCustomizations": {
+			"titleBar.activeBackground": "#2d9ed2",
+			"titleBar.activeForeground": "#222222",
+			"titleBar.inactiveBackground": "#2d9ed2",
+			"titleBar.inactiveForeground": "#222222"
+		}
+	}
+}
