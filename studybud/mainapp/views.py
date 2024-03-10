@@ -22,11 +22,11 @@ def loginPage(request):
         password = request.POST.get('password')
 
         try:
-            user = User.objects.get(username=email)
+            user = User.objects.get(email=email)
         except:
             messages.error(request, 'User does not exist')
 
-        user = authenticate(request, username=email, password=password)
+        user = authenticate(request, email=email, password=password)
 
         if user is not None:
             login(request, user)
