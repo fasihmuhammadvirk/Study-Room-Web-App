@@ -41,17 +41,12 @@ INSTALLED_APPS = [
 
     'mainapp.apps.mainappConfig',
 
-    'rest_framework',
-    'corsheaders'
 ]
 
 AUTH_USER_MODEL = 'mainapp.User'
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
-
-    'corsheaders.middleware.CorsMiddleware',
-
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
