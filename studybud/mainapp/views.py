@@ -24,7 +24,9 @@ def loginPage(request):
         try:
             user = User.objects.get(email=email)
         except:
-            messages.error(request, 'User does not exist')
+            mymessage = ["User doesnot exit"]
+            context = {'page': page, 'messages': mymessage}
+            return render(request, 'mainapp/login_register.html', context)
 
         user = authenticate(request, email=email, password=password)
 
@@ -32,7 +34,7 @@ def loginPage(request):
             login(request, user)
             return redirect('home')
         else:
-            messages.error(request, 'Username OR Password does not exist')
+            messages.error(request, 'Incorrect Email or Password')
 
     context = {'page': page}
     return render(request, 'mainapp/login_register.html', context)

@@ -15,13 +15,7 @@
     {% include 'navbar.html' %}
 
 
-    {% if messages %}
-    <ul class="messages">
-        {% for message in messages %}
-        <li>{{ message }}</li>
-        {% endfor %}
-    </ul>
-    {% endif %}
+    {% include 'mainapp/alert_section.html' %}
 
     {% block content %}
     

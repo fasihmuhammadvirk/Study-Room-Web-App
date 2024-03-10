@@ -1,7 +1,9 @@
-{%extends 'main.html'%} {%block content%} {%load static%}
+{%extends 'main.html'%} {%block content%} {%load static%} 
+
+
 <main class="auth layout">
 	{% if page == 'login' %}
-	<div class="container">
+	<div class="container" style = "align-items: center; justify-content: center;">
 		<div class="layout__box">
 			<div class="layout__boxHeader">
 				<div class="layout__boxTitle">
@@ -65,7 +67,7 @@
 	</div>
 
 	{% else %}
-	<div class="container">
+	<div class="container" style = "align-items: center; justify-content: center;">
 		<div class="layout__box">
 			<div class="layout__boxHeader">
 				<div class="layout__boxTitle">
@@ -79,18 +81,16 @@
 				<h2 class="auth__tagline">Find your study partner</h2>
 
 				<form class="form" action="" method="POST">
-					{% csrf_token %} 
-          {%for field in form%}
+					{% csrf_token %} {%for field in form%}
 					<div class="form__group">
 						<label for="room_name">{{field.label}}</label>
-						{{field}}
-            {% if field.label == 'Password confirmation' %}
-            <br><br>
-            <a>* Password must be atleast 8 characters</a>
-            <a>* Should not be similar to your Username</a>
-            <a>* Must have a upper and lower case</a>
-            <a>* Must have a number and special character</a>
-            {%endif%}
+						{{field}} {% if field.label == 'Password confirmation' %}
+						<br /><br />
+						<a>* Password must be atleast 8 characters</a>
+						<a>* Should not be similar to your Username</a>
+						<a>* Must have a upper and lower case</a>
+						<a>* Must have a number and special character</a>
+						{%endif%}
 					</div>
 					{%endfor%}
 
