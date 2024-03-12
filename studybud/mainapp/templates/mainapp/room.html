@@ -1,6 +1,7 @@
 {% extends 'main.html' %} {%block content%}
 <main class="profile-page layout layout--2">
-	<div class="container" >
+
+	<div class="container" style = "margin-bottom:4rem ;">
 		<!-- Room Start -->
 		<div class="room">
 			<div class="room__top">
@@ -19,7 +20,8 @@
 							></path>
 						</svg>
 					</a>
-					<h3>Study Room</h3>
+					<h3>{{room.name}}</h3>
+					<span>{{room.created|timesince}} ago</span>
 				</div>
 
 				{% if room.host == request.user %}
@@ -71,10 +73,10 @@
 			</div>
 			<div class="room__box scroll">
 				<div class="room__header scroll">
-					<div class="room__info">
+					<!-- <div class="room__info">
 						<h3>{{room.name}}</h3>
 						<span>{{room.created|timesince}} ago</span>
-					</div>
+					</div> -->
 					<div class="room__hosted">
 						<p>Hosted By</p>
 						<a
@@ -130,7 +132,19 @@
 								</a>
 								{% endif %}
 							</div>
-							<div class="thread__details">{{message.body}}</div>
+								{% if message.bodyimage.url != null%}
+									{% if 'jpeg' in message.bodyimage.url|lower  or 'jpg' in message.bodyimage.url|lower or 'png' in message.bodyimage.url|lower or 'gif' in message.bodyimage.url|lower %}
+										<img style="width: 300px ;height: 300px;" class="thread__details" src="{{ message.bodyimage.url }}" />
+									{% else %}
+										<p>File attached: {{ message.bodyimage.name }}</p>
+										<a href="{{ message.bodyimage.url }}">Download</a>
+									{% endif %}
+								{% endif %}
+								
+								{% if message.body%}
+								<div class="thread__details">{{message.body}}</div>
+								{% endif %}
+							
 						</div>
 						{% endfor %}
 					</div>
@@ -138,13 +152,20 @@
 			</div>
 			{% if request.user.is_authenticated %}
 			<div class="room__message">
-				<form method="POST" action="">
+				<form method="POST" action="" enctype="multipart/form-data">
 					{% csrf_token %}
 					<input
 						type="text"
 						name="body"
+						id = "texfield"
 						placeholder="Write your message here..."
+						
 					/>
+						<label for="file-input" id = "file-label">
+							<i class="fa-solid fa-file-import"></i>
+						</label>
+						<input type="file" name="bodyimage" id="file-input" />
+					<button type="submit" method="POST" action="">Send</button>
 				</form>
 			</div>
 			{% endif %}
@@ -173,5 +194,15 @@
 		<!--  End -->
 	</div>
 </main>
+<script>
+    $(document).ready(function () {
+        $('#file-input').change(function () {
+            var fileName = $(this).val().split('\\').pop(); // Get the file name from the input
+            $('#texfield').val(fileName); // Update the label text with the file name
 
+            // Optionally, you can also change the style, e.g., add a class
+            // $('#file-label').addClass('file-uploaded');
+        });
+    });
+</script>
 {%endblock%}

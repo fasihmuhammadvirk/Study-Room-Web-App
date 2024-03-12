@@ -910,7 +910,7 @@ a {
 .room,
 .participants {
 	background: var(--color-dark);
-	max-height: 87.5vh;
+	max-height: 96.5vh;
 	border-radius: 0.7rem;
 	overflow: hidden;
 	position: relative;
@@ -994,6 +994,7 @@ a {
 .room__box {
 	padding-left: 2rem;
 	padding-right: 2rem;
+	/* margin-bottom: 2rem; */
 	height: 80.5vh;
 	/* overflow-y: auto; */
 	padding-bottom: 0;
@@ -1107,7 +1108,7 @@ a {
 }
 
 .room__message {
-	padding: 2rem;
+	padding: 0.9rem;
 	position: absolute;
 	z-index: 111;
 	bottom: 0;
@@ -1116,21 +1117,83 @@ a {
 	background: transparent;
 }
 
+.room__message form{
+	display: flex;
+}
+
 .room__message > form > input {
+
 	resize: none;
 	background-color: var(--color-dark-light);
 	color: var(--color-light);
 	border: none;
 	outline: none;
-	border-radius: 0.7rem;
 	height: 4.5rem;
-	width: 100%;
+	/* width: 100%; */
 	margin-top: -1rem;
 	padding: 1.2rem;
 	font-size: 1.4rem;
 	font-weight: 500;
 	position: relative;
 }
+.room__message > form > input[name="body"] {
+	width:80%;
+    border-radius: 0.7rem 0 0 0.7rem; /* top-left and bottom-left */
+}
+
+
+/* Hide the default file input */
+.room__message > form > input[type="file"] {
+    display: none;
+}
+
+/* Style the custom file input label/button */
+.room__message > form > label {
+
+	resize: none;
+	background-color: var(--color-dark-light);
+	color: var(--color-light);
+	border: none;
+	outline: none;
+	height: 4.5rem;
+	/* width: 100%; */
+	width:10%;
+	margin-top: -1rem;
+	padding: 1.2rem;
+	font-size: 1.4rem;
+	font-weight: 500;
+	position: relative;
+}
+
+
+/* .room__message > form > input[name="bodyimage"] {
+    border-radius: 0 0.7rem 0.7rem 0; 
+} */
+
+
+.room__message > form > button {
+	background-color:var(--color-dark-light) ;
+	text-align: center;
+	border: none;
+	outline: none;
+	color: var(--color-light);
+	resize: none;
+	width: 10%;
+	border: none;
+	outline: none;
+	margin-top: -1rem;
+	font-size: 1.4rem;
+	font-weight: 500;
+	position: relative;
+	border-radius: 0 0.7rem 0.7rem 0; 
+}
+
+.room__message > form > button:hover {
+	background-color: var(--color-dark);
+}
+
+
+
 
 .room__message > form > input::placeholder {
 	color: var(--color-light-gray);
@@ -1149,7 +1212,7 @@ a {
 
 .participants__list {
 	padding: 2rem;
-	height: 82.5vh;
+	height: 96.5vh;
 	overflow-y: scroll;
 	padding-bottom: 0;
 }
@@ -1172,3 +1235,15 @@ a {
 	color: var(--color-main);
 	font-weight: 1.4rem;
 }
+
+
+
+
+
+
+/* adding new css  */
+/* Handle file input label click event */
+.room__message > form > input[type="file"]:focus + label,
+.room__message > form > input[type="file"]:not(:focus) + label {
+	cursor: pointer;}
+

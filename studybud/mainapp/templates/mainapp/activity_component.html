@@ -19,6 +19,7 @@
 	
 
 	{% for message in room_messages%}
+	{% if message.body %}
 	<div class="activities__box">
 		<div class="activities__boxHeader roomListRoom__header">
 			<a
@@ -62,5 +63,6 @@
 			<div class="activities__boxRoomContent">{{message.body}}</div>
 		</div>
 	</div>
+	{%endif%}
 	{%endfor%}
 </div>

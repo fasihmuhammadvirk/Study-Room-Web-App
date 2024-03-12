@@ -90,11 +90,20 @@ def room(request, pk):
     participants = room.participants.all()
 
     if request.method == 'POST':
-        message = Message.objects.create(
-            user=request.user,
-            room=room,
-            body=request.POST.get('body')
-        )
+        # Access file from request.FILES
+        bodyimage = request.FILES.get('bodyimage')
+        if bodyimage:
+            message = Message.objects.create(
+                user=request.user,
+                room=room,
+            )
+            message.bodyimage.save(bodyimage.name, bodyimage)
+        else:
+            message = Message.objects.create(
+                user=request.user,
+                room=room,
+                body=request.POST.get('body'),
+            )
         room.participants.add(request.user)
         return redirect('room', pk=room.id)
 
@@ -179,6 +188,7 @@ def deleteMessage(request, pk):
 
     if request.method == 'POST':
         message.delete()
+        # return redirect(request.META.get('HTTP_REFERER', '/'))
         return redirect('home')
     return render(request, 'mainapp/delete.html', {'obj': message})
 
