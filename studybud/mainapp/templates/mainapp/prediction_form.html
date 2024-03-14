@@ -1,0 +1,88 @@
+{% extends 'main.html' %}
+{% block content %}
+<main class="update-account layout">
+    <div class="container" style="align-items: center; justify-content: center;">
+        <div class="layout__box">
+            <div class="layout__boxHeader">
+                <div class="layout__boxTitle">
+                    <a href="{% url 'home' %}">
+                        <svg version="1.1" xmlns="http://www.w3.org/2000/svg" width="32" height="32"
+                            viewBox="0 0 32 32">
+                            <title>arrow-left</title>
+                            <path
+                                d="M13.723 2.286l-13.723 13.714 13.719 13.714 1.616-1.611-10.96-10.96h27.625v-2.286h-27.625l10.965-10.965-1.616-1.607z">
+                            </path>
+                        </svg>
+                    </a>
+                    <h3>Predict GPA's</h3>
+                </div>
+            </div>
+            <div class="layout__body">
+                <form class="form" action="" method="POST" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <div class="form__group">
+                        <label for="SGPA1">SGPA1</label>
+                        <input required type="number" step="0.1" name="SGPA1" />
+                    </div>
+                    <div class="form__group">
+                        <label for="SGPA2">SGPA2</label>
+                        <input required type="number" step="0.1" name="SGPA2" />
+                    </div>
+                    <div class="form__group">
+                        <label for="SGPA3">SGPA3</label>
+                        <input required type="number" step="0.1" name="SGPA3" />
+                    </div>
+                    <div class="form__group">
+                        <label for="SGPA4">SGPA4</label>
+                        <input required type="number" step="0.1" name="SGPA4" />
+                    </div>
+                    <div class="form__group">
+                        <label for="InterPercentage">Inter Percentage</label>
+                        <input required type="number" step="0.1" name="InterPercentage" />
+                    </div>
+                    <div class="form__group">
+                        <label for="Interest">Do you opt this program with your own interest?</label>
+                        <select name="Interest" id="Interest">
+                            <option value="0">Agree</option>
+                            <option value="3">Strongly Agree</option>
+                            <option value="2">Neutral</option>
+                            <option value="1">Disagree</option>
+                            <option value="4">Strongly Disagree</option>
+                        </select>
+                    </div>
+                    <div class="form__group">
+                        <label for="ExamStressImpactOnPerformance">Exam Stress Impact on Performance</label>
+                        <select name="ExamStressImpactOnPerformance" id="ExamStressImpactOnPerformance">
+                            <option value="0">Agree</option>
+                            <option value="3">Strongly Agree</option>
+                            <option value="2">Neutral</option>
+                            <option value="1">Disagree</option>
+                            <option value="4">Strongly Disagree</option>
+                        </select>
+                    </div>
+                    <div class="form__group">
+                        <label for="TimeConsumedOnCommuting">Time Consumed on Commuting</label>
+                        <select name="TimeConsumedOnCommuting" id="TimeConsumedOnCommuting">
+                            <option value="0">Agree</option>
+                            <option value="3">Strongly Agree</option>
+                            <option value="2">Neutral</option>
+                            <option value="1">Disagree</option>
+                            <option value="4">Strongly Disagree</option>
+                        </select>
+                    </div>
+                    {% if SGPA and CGPA%}
+                    <p>Your Predicted GPA: {{SGPA}} and GSPA: {{CGPA}}</p>
+                    <p>Note: This is a prediction based on our trained model it may not be 100% accurate</p>
+                    <br>
+                    {% endif %}
+                    
+                    <div class="form__action">
+                        <a class="btn btn--dark" href="{{request.META.HTTP_REFERER}}">Cancel</a>
+                        <button class="btn btn--main" type="submit">Submit</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</main>
+{% endblock content %}

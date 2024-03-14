@@ -1,4 +1,4 @@
-<div class="activities">
+<div class="activities" style="margin-bottom: 3rem;">
 	<div class="activities__header">
 		<h2>Recent Activities</h2>
 	</div>
@@ -19,7 +19,7 @@
 	
 
 	{% for message in room_messages%}
-	{% if message.body %}
+	{% if message %}
 	<div class="activities__box">
 		<div class="activities__boxHeader roomListRoom__header">
 			<a
@@ -56,11 +56,17 @@
 		</div>
 		<div class="activities__boxContent">
 			<p>
-				replied to post “<a href="{% url 'room' message.room.id %}"
+				replied in room “<a href="{% url 'room' message.room.id %}"
 					>"{{message.room}}"</a
 				>”
 			</p>
+			{%if message.bodyimage.url != null %}
+			<div class="activities__boxRoomContent">shared: {{message.bodyimage.name | truncatechars:18}}</div>
+
+			{%else%}
 			<div class="activities__boxRoomContent">{{message.body}}</div>
+			{%endif%}
+
 		</div>
 	</div>
 	{%endif%}

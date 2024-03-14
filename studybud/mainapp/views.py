@@ -6,6 +6,8 @@ from django.db.models import Q
 from django.contrib.auth import authenticate, login, logout
 from .models import Room, Topic, Message, User
 from .forms import RoomForm, UserForm, MyUserCreationForm
+import pandas as pd
+import joblib
 # Create your views here.
 
 
@@ -219,3 +221,41 @@ def topicsPage(request):
 def activityPage(request):
     room_messages = Message.objects.all()
     return render(request, 'mainapp/activity.html', {'room_messages': room_messages})
+
+
+@login_required(login_url='login')
+def predict_sgpa_cgpa(request):
+    if request.method == 'POST':
+        # Extract form data from POST request
+        input_data = {
+            'SGPA1': float(request.POST.get('SGPA1')),
+            'SGPA2': float(request.POST.get('SGPA2')),
+            'SGPA3': float(request.POST.get('SGPA3')),
+            'SGPA4': float(request.POST.get('SGPA4')),
+            'Inter Percentage': float(request.POST.get('InterPercentage')),
+            'Time Consumed on Commuting': int(request.POST.get('TimeConsumedOnCommuting')),
+            'Exam Stress Impact on Performance': int(request.POST.get('ExamStressImpactOnPerformance')),
+            'Interest': int(request.POST.get('Interest'))
+        }
+
+        # Convert the input values to a DataFrame
+        input_df = pd.DataFrame([input_data])
+
+        # Load the trained models
+        loaded_sgpa_model = joblib.load('/Users/fasihmuhammad/Desktop/Github/Study-Room-Web-App/model/sgpa_model.pkl')
+        loaded_cgpa_model = joblib.load('/Users/fasihmuhammad/Desktop/Github/Study-Room-Web-App/model/cgpa_model.pkl')
+
+        # Make predictions for both SGPA and CGPA
+        sgpa_prediction = loaded_sgpa_model.predict(input_df)
+        cgpa_prediction = loaded_cgpa_model.predict(input_df)
+
+        # Prepare the context for rendering the template
+        context = {
+            'SGPA': sgpa_prediction[0],
+            'CGPA': cgpa_prediction[0]
+        }
+
+        # Render the template with the prediction results
+        return render(request, 'mainapp/prediction_form.html', context)
+    else:
+        return render(request, 'mainapp/prediction_form.html')

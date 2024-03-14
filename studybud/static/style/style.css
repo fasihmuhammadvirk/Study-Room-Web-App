@@ -1072,6 +1072,7 @@ a {
 	padding: 0 2rem 4rem 2rem;
 }
 
+
 .thread {
 	border-left: 2px solid var(--color-dark);
 	padding-left: 1rem;
@@ -1140,6 +1141,12 @@ a {
 	width:80%;
     border-radius: 0.7rem 0 0 0.7rem; /* top-left and bottom-left */
 }
+@media screen and (max-width: 500px) {
+	.room__message > form > input[name="body"] {
+		width:70%;
+	}
+	
+}
 
 
 /* Hide the default file input */
@@ -1186,6 +1193,13 @@ a {
 	font-weight: 500;
 	position: relative;
 	border-radius: 0 0.7rem 0.7rem 0; 
+}
+
+@media screen and (max-width: 500px) {
+	.room__message > form > button {
+		width:20%;
+	}
+	
 }
 
 .room__message > form > button:hover {

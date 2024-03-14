@@ -134,9 +134,29 @@
 							</div>
 								{% if message.bodyimage.url != null%}
 									{% if 'jpeg' in message.bodyimage.url|lower  or 'jpg' in message.bodyimage.url|lower or 'png' in message.bodyimage.url|lower or 'gif' in message.bodyimage.url|lower %}
-										<img style="width: 300px ;height: 300px;" class="thread__details" src="{{ message.bodyimage.url }}" />
-									{% else %}
-										<p>File attached: {{ message.bodyimage.name }}</p>
+										<!-- <img style="width: 200px ;height: 200px;" class="thread__details" src="{{ message.bodyimage.url }}" /> -->
+										<a href="javascript:void(0);" onclick="openImagePreview('{{ message.bodyimage.url }}')">
+											<img style="width: 200px; height: 200px;" class="thread__details" src="{{ message.bodyimage.url }}" />
+										</a>
+								
+										<!-- Image Preview Overlay -->
+										<div id="imagePreviewOverlay" style="border-radius: 1rem; z-index: 9999; display: none; position: absolute; top: 50%; left: 26%; width: 50%; transform: translate(-50%, -50%);  background: #696d97; text-align: center;">
+											<img style="width: 90%; height: auto; padding: 1rem" src="" id="previewedImage" />
+											<p><a href="javascript:void(0);" onclick="closeImagePreview()"><i class="fas fa-close"></i></a></p>
+										</div>
+								
+										<script>
+											function openImagePreview(url) {
+												document.getElementById('previewedImage').src = url;
+												document.getElementById('imagePreviewOverlay').style.display = 'block';
+											}
+								
+											function closeImagePreview() {
+												document.getElementById('imagePreviewOverlay').style.display = 'none';
+											}
+										</script>
+										{% else %}
+										<p>File attached: {{ message.bodyimage.name|truncatechars:25 }}</p>
 										<a href="{{ message.bodyimage.url }}">Download</a>
 									{% endif %}
 								{% endif %}

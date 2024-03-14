@@ -1,7 +1,7 @@
 {% extends 'main.html' %} {%block content%}
 <main class="layout">
 	<div class="container">
-		<div class="layout__box">
+		<div class="layout__box" style="margin-bottom: 2rem;">
 			<div class="layout__boxHeader">
 				<div class="layout__boxTitle">
 					<a href="{% url 'home' %}">
@@ -34,8 +34,8 @@
 			{%endif%} 
       
       {% for message in room_messages%}
-	  {% if message.body %}
-			<div class="activities__box">
+	  {% if message %}
+			<div class="activities__box" >
 				<div class="activities__boxHeader roomListRoom__header">
 					<a
 						href="{% url 'user-profile' message.user.id %}"
@@ -71,11 +71,17 @@
 				</div>
 				<div class="activities__boxContent">
 					<p>
-						replied to post “<a href="{% url 'room' message.room.id %}"
+						replied in room “<a href="{% url 'room' message.room.id %}"
 							>"{{message.room}}"</a
 						>”
 					</p>
-					<div class="activities__boxRoomContent">{{message.body}}</div>
+					{%if message.bodyimage.url != null %}
+			<div class="activities__boxRoomContent">shared: {{message.bodyimage.name | truncatechars:18}}</div>
+
+			{%else%}
+			<div class="activities__boxRoomContent">{{message.body}}</div>
+			{%endif%}
+
 				</div>
 			</div>
 			{%endif%}

@@ -20,4 +20,6 @@ urlpatterns = [
 
     path('topics/', views.topicsPage, name="topics"),
     path('activity/', views.activityPage, name="activity"),
+    
+    path('predict/', views.predict_sgpa_cgpa, name='predict_sgpa_cgpa'),
 ]
