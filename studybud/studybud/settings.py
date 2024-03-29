@@ -25,6 +25,16 @@ SECRET_KEY = 'django-insecure-k59r5352rsf+&&@0gu68u2iz$mb=1a-1)mqxbm8uvg^y42i=fv
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_HOST_USER = 'fasihmuhammad.virk@gmail.com'
+EMAIL_HOST_PASSWORD = 'kxvtjjvqcobnqhkh'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_USE_SSL = False
+# EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_BACKEND = 'mainapp.backend.email_backend.Emailbackend'
+
+
 ALLOWED_HOSTS = ['*']
 
 
@@ -139,3 +149,6 @@ MEDIA_ROOT = BASE_DIR / 'static/images'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 CORS_ALLOW_ALL_ORIGINS = True
+
+
+# Email Settings

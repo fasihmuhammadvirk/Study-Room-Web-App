@@ -1,0 +1,40 @@
+{% extends 'main.html' %}
+{% block content %}
+{% load static %}
+
+<main class="auth layout">
+    <div class="container" style="align-items: center; justify-content: center;">
+        <div class="layout__box">
+            <div class="layout__boxHeader">
+                <div class="layout__boxTitle">
+                    <div class="header__logo">
+                        <img src="{% static 'images/logo.svg' %}" />
+                        <h1>Enter OTP</h1>
+                    </div>
+                </div>
+            </div>
+            <div class="layout__body">
+                <h2 class="auth__tagline">Enter the OTP sent to your email</h2>
+
+                <form class="form" action="" method="POST">
+                    {% csrf_token %}
+                    <div class="form__group">
+                        <label for="otp">OTP Send to Email {{request.POST.email}}</label>
+                        <input id="otp" name="otp" type="text" placeholder="123456" required />
+                    </div>
+                    <!-- <input type="hidden" name="email" value="{{ request.POST.email }}"> -->
+
+                    <button class="btn btn--main" type="submit">
+                        Verify OTP
+                    </button>
+                </form>
+
+                <div class="auth__action">
+                    <p>Didn't receive the OTP?</p>
+                    <a href="{% url 'forget_password' %}" class="btn btn--link">Resend OTP</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+{% endblock %}

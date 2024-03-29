@@ -36,6 +36,11 @@
 							placeholder="&bull;&bull;&bull;&bull;&bull;&bull;&bull;&bull;"
 						/>
 					</div>
+					<!-- Add this line inside your login form, right after the password input field -->
+					<div class="auth__action">
+						<a href="{% url 'forget_password' %}" class="btn btn--link">Forgot Password?</a>
+					</div>
+
 
 					<button class="btn btn--main" type="submit">
 						<svg

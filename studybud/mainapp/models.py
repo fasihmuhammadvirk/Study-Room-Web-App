@@ -1,6 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
-
+from django.utils import timezone
 # Create your models here.
 
 
@@ -54,3 +54,12 @@ class Message(models.Model):
 
     def __str__(self):
         return self.body[0:50]
+
+
+class OTP(models.Model):
+    email = models.EmailField()  # Removed unique=True
+    otp = models.CharField(max_length=6)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def is_expired(self):
+        return timezone.now() > self.created_at + timezone.timedelta(minutes=15)

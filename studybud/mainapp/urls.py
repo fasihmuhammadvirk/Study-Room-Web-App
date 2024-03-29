@@ -5,7 +5,10 @@ urlpatterns = [
     path('login/', views.loginPage, name="login"),
     path('logout/', views.logoutUser, name="logout"),
     path('register/', views.registerPage, name="register"),
-
+    path('forget_password/', views.forget_password, name='forget_password'),
+    path('otp_input/<str:email>', views.otp_input, name='otp_input'),
+    path('change_password/<str:email>/',
+         views.change_password, name='change_password'),
 
     path('', views.home, name="home"),
     path('room/<str:pk>/', views.room, name="room"),
@@ -20,6 +23,6 @@ urlpatterns = [
 
     path('topics/', views.topicsPage, name="topics"),
     path('activity/', views.activityPage, name="activity"),
-    
+
     path('predict/', views.predict_sgpa_cgpa, name='predict_sgpa_cgpa'),
 ]

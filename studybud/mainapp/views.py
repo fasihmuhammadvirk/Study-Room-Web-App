@@ -4,10 +4,13 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.db.models import Q
 from django.contrib.auth import authenticate, login, logout
-from .models import Room, Topic, Message, User
+from .models import Room, Topic, Message, User, OTP
 from .forms import RoomForm, UserForm, MyUserCreationForm
 import pandas as pd
 import joblib
+from django.core.mail import send_mail
+from django.conf import settings
+import random
 # Create your views here.
 
 
@@ -40,6 +43,65 @@ def loginPage(request):
 
     context = {'page': page}
     return render(request, 'mainapp/login_register.html', context)
+
+
+def forget_password(request):
+    if request.method == 'POST':
+        email = request.POST['email']
+        try:
+            user = User.objects.get(email=email)
+        except User.DoesNotExist:
+            # Return an error message to the user
+            return render(request, 'mainapp/forget_password.html', {'messages': ['Email not found']})
+
+        # Generate and save the OTP
+        otp = OTP.objects.create(email=email, otp=str(
+            random.randint(100000, 999999)))
+
+        host_mail = settings.EMAIL_HOST_USER
+        # Send the OTP via email
+        send_mail(
+            'Your OTP',  # title
+            f'Your OTP is {otp.otp}',  # message
+            host_mail,  # host email
+            [email],  # reciver email address
+            fail_silently=False,
+        )
+
+        return redirect('otp_input',email=email)
+
+    return render(request, 'mainapp/forget_password.html')
+
+
+def otp_input(request, email):
+    if request.method == 'POST':
+        otp = request.POST['otp']
+        # email = request.POST['email']
+        try:
+            otp_obj = OTP.objects.filter(
+                email=email).order_by('-created_at').first()
+        except OTP.DoesNotExist:
+            return render(request, 'mainapp/otp_input.html', {'messages': ['Invalid email']})
+
+        if otp_obj.otp == otp and not otp_obj.is_expired():
+            return redirect('change_password', email=email)
+        else:
+            return render(request, 'mainapp/otp_input.html', {'messages': ['Invalid or expired OTP']})
+    return render(request, 'mainapp/otp_input.html')
+
+
+def change_password(request, email):
+    if request.method == 'POST':
+        new_password = request.POST['new_password']
+        try:
+            user = User.objects.get(email=email)
+        except User.DoesNotExist:
+            return render(request, 'mainapp/change_password.html', {'messages': ['User not found']})
+
+        user.set_password(new_password)
+        user.save()
+        return redirect('login')
+    return render(request, 'mainapp/change_password.html')
 
 
 def logoutUser(request):
@@ -242,8 +304,10 @@ def predict_sgpa_cgpa(request):
         input_df = pd.DataFrame([input_data])
 
         # Load the trained models
-        loaded_sgpa_model = joblib.load('/Users/fasihmuhammad/Desktop/Github/Study-Room-Web-App/model/sgpa_model.pkl')
-        loaded_cgpa_model = joblib.load('/Users/fasihmuhammad/Desktop/Github/Study-Room-Web-App/model/cgpa_model.pkl')
+        loaded_sgpa_model = joblib.load(
+            '/Users/fasihmuhammad/Desktop/Github/Study-Room-Web-App/model/sgpa_model.pkl')
+        loaded_cgpa_model = joblib.load(
+            '/Users/fasihmuhammad/Desktop/Github/Study-Room-Web-App/model/cgpa_model.pkl')
 
         # Make predictions for both SGPA and CGPA
         sgpa_prediction = loaded_sgpa_model.predict(input_df)
