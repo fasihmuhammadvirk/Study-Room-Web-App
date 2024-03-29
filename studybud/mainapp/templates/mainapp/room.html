@@ -68,6 +68,8 @@
 							></path>
 						</svg>
 					</a>
+
+
 				</div>
 				{% endif %}
 			</div>
@@ -92,6 +94,9 @@
 					<div class="room__details">
 						{{room.description |truncatechars:300 }}
 					</div>
+					{% if request.user == room.host %}
+					<a class = "room__topics" style= "background-color: #71c6dd; color:#2d2d39 " href="{% url 'accept_join_requests' room.id %}">Accept Join Requests</a>
+				{% endif %}
 					<span class="room__topics">{{room.topic}}</span>
 				</div>
 				<div class="room__conversation">

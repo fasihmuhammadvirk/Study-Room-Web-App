@@ -32,6 +32,9 @@ class Room(models.Model):
         User, related_name='participants', blank=True)
     updated = models.DateTimeField(auto_now=True)
     created = models.DateTimeField(auto_now_add=True)
+    request_to_join = models.ManyToManyField(
+        User, related_name='requested_rooms', blank=True)
+    is_private = models.BooleanField(default=False)
 
     class Meta:
         ordering = ['-updated', '-created']
@@ -63,3 +66,14 @@ class OTP(models.Model):
 
     def is_expired(self):
         return timezone.now() > self.created_at + timezone.timedelta(minutes=15)
+
+
+class JoinRequest(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    room = models.ForeignKey(Room, on_delete=models.CASCADE)
+    created_at = models.DateTimeField(auto_now_add=True)
+    status = models.CharField(max_length=20, choices=[(
+        'pending', 'Pending'), ('approved', 'Approved'), ('denied', 'Denied')], default='pending')
+
+    def __str__(self):
+        return f"{self.user.username} - {self.room.name}"

@@ -1,5 +1,5 @@
 {%extends 'main.html'%} {%block content%}
-<main class="delete-item layout">
+<main class="delete-item layout"  >
 	<div class="container" style="align-items: center !important; justify-content: center !important">
 		<div class="layout__box">
 			<div class="layout__boxHeader">
@@ -25,11 +25,12 @@
 				<form class="form" method = "POST" action="">
 					<div class="form__group">
                         {% csrf_token %}
-						<p>Are you sure you want to delete "{{obj}}"?</p>
+                        <h2>Request to Join {{ room.name }}</h2>
+                        <p>You are requesting to join a private room. Please wait for the host to approve your request.</p>                
 					</div>
 
 					<div class="for__group">
-						<input class="btn btn--main" type="submit" value="Confirm" />
+						<button type="submit" class="btn btn--main">Send Request</button>
 					</div>
 				</form>
 			</div>

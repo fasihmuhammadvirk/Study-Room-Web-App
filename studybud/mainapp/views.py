@@ -4,7 +4,7 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.db.models import Q
 from django.contrib.auth import authenticate, login, logout
-from .models import Room, Topic, Message, User, OTP
+from .models import Room, Topic, Message, User, OTP, JoinRequest
 from .forms import RoomForm, UserForm, MyUserCreationForm
 import pandas as pd
 import joblib
@@ -68,7 +68,7 @@ def forget_password(request):
             fail_silently=False,
         )
 
-        return redirect('otp_input',email=email)
+        return redirect('otp_input', email=email)
 
     return render(request, 'mainapp/forget_password.html')
 
@@ -150,6 +150,14 @@ def home(request):
 @login_required(login_url='login')
 def room(request, pk):
     room = Room.objects.get(id=pk)
+    user_requested = JoinRequest.objects.filter(
+        room=room, user=request.user).first()
+    if user_requested is not None and request.user != room.host and request.user not in room.participants.all():
+        messages.error(request, 'You have already requested to join this room')
+        return redirect('home')
+    if request.user != room.host and room.is_private and request.user not in room.participants.all():
+        return redirect('request_join_room', pk=room.id)
+
     room_messages = room.message_set.all().order_by('-created')
     participants = room.participants.all()
 
@@ -193,18 +201,59 @@ def createRoom(request):
     form = RoomForm()
     topics = Topic.objects.all()
     if request.method == 'POST':
-
         topic_name = request.POST.get('topic')
         topic, created = Topic.objects.get_or_create(name=topic_name)
+
+        # Convert the 'is_private' checkbox value to a boolean
+        is_private = request.POST.get('is_private') == 'on'
 
         Room.objects.create(
             host=request.user,
             topic=topic,
             name=request.POST.get('name'),
-            description=request.POST.get('description'))
+            description=request.POST.get('description'),
+            is_private=is_private  # Use the boolean value here
+        )
         return redirect('home')
     context = {'form': form, "topics": topics}
     return render(request, 'mainapp/room_form.html', context)
+
+
+@login_required(login_url='login')
+def request_join_room(request, pk):
+    room = Room.objects.get(id=pk)
+    if request.method == 'POST':
+        JoinRequest.objects.create(
+            user=request.user,
+            room=room,
+        )
+        messages.success(
+            request, 'Your request to join the room has been sent.')
+        return redirect('home')
+    return render(request, 'mainapp/request_join_room.html', {'room': room})
+
+
+@login_required(login_url='login')
+def accept_join_requests(request, pk):
+    room = Room.objects.get(id=pk)
+    if request.user != room.host:
+        return HttpResponse('You are not allowed here!!')
+    join_requests = JoinRequest.objects.filter(room=room, status='pending')
+    if request.method == 'POST':
+        action = request.POST.get('action')
+        request_id = request.POST.get('request_id')
+        join_request = JoinRequest.objects.get(id=request_id)
+        if action == 'approve':
+            join_request.status = 'approved'
+            join_request.save()
+            join_request.room.participants.add(join_request.user)
+            messages.success(request, 'Join request approved.')
+        elif action == 'deny':
+            join_request.status = 'denied'
+            join_request.save()
+            messages.success(request, 'Join request denied.')
+        return redirect('accept_join_requests', pk=room.id)
+    return render(request, 'mainapp/accept_join_requests.html', {'join_requests': join_requests, 'room': room})
 
 
 @login_required(login_url='login')

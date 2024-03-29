@@ -52,7 +52,15 @@
 			</svg>
 			{{room.participants.all.count}} Joined
 		</a>
-		<p class="roomListRoom__topic">{{room.topic.name}}</p>
+		{% if request.user == room.host %}
+		<p class="roomListRoom__topic">{{room.topic.name}} (Host)</p>
+		{% else %}
+			{% if room.is_private %}
+			<p class="roomListRoom__topic">{{room.topic.name}} (Private)</p>
+			{% else %}
+			<p class="roomListRoom__topic">{{room.topic.name}} (Public)</p>		
+			{% endif %}
+		{% endif %}
 	</div>
 </div>
 {%endfor%}
