@@ -1,7 +1,8 @@
-<div class="activities" style="margin-bottom: 3rem;">
-	<div class="activities__header">
-		<h2>Recent Activities</h2>
-	</div>
+
+	<div class="activities" style="margin-bottom: 3rem;">
+		<div class="activities__header">
+			<h2>Recent Activities</h2>
+		</div>
 
 	{%if room_messages.count == 0 or room_messages.count == '0' %}
 	<div class="activities__box">
@@ -72,3 +73,4 @@
 	{%endif%}
 	{%endfor%}
 </div>
+

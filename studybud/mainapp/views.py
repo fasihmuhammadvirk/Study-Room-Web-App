@@ -1,3 +1,5 @@
+from .forms import RoomForm
+from .models import Room, Topic
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from django.contrib import messages
@@ -204,8 +206,10 @@ def createRoom(request):
         topic_name = request.POST.get('topic')
         topic, created = Topic.objects.get_or_create(name=topic_name)
 
-        # Convert the 'is_private' checkbox value to a boolean
-        is_private = request.POST.get('is_private') == 'on'
+        # Retrieve the 'room_privacy' value from the form submission
+        room_privacy = request.POST.get('room_privacy')
+        # Convert the 'room_privacy' string value to a boolean
+        is_private = room_privacy == 'private'
 
         Room.objects.create(
             host=request.user,
