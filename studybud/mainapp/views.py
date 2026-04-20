@@ -8,8 +8,8 @@ from django.db.models import Q
 from django.contrib.auth import authenticate, login, logout
 from .models import Room, Topic, Message, User, OTP, JoinRequest
 from .forms import RoomForm, UserForm, MyUserCreationForm
-import pandas as pd
-import joblib
+# pandas and joblib are imported locally inside predict_sgpa_cgpa to avoid
+# requiring ML dependencies when the feature is not in use
 from django.core.mail import send_mail
 from django.conf import settings
 import random
@@ -340,6 +340,8 @@ def activityPage(request):
 
 @login_required(login_url='login')
 def predict_sgpa_cgpa(request):
+    import pandas as pd  # noqa: PLC0415
+    import joblib        # noqa: PLC0415
     if request.method == 'POST':
         # Extract form data from POST request
         input_data = {
