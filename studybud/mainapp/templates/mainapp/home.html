@@ -53,21 +53,22 @@
 					</svg>
 					Create Room
 				</a>
-				<a class="btn btn--main" href="{% url 'predict_sgpa_cgpa' %}">
-					<svg
-						version="1.1"
-						xmlns="http://www.w3.org/2000/svg"
-						width="32"
-						height="32"
-						viewBox="0 0 32 32"
-					>
-						<title></title>
-						<path
-							d="M1.057 0.943h1.885v14.115h22.26l-4.646 4.646 1.06 1.06 6.352-6.352c0.391-0.391 0.391-1.023 0-1.414l-6.352-6.352-1.06 1.06 4.646 4.646h-22.26v-14.115z"
-						></path>
-					</svg>
-					Predict GPA
-				</a>
+				{# PREDICT GPA BUTTON - temporarily hidden, uncomment to restore #}
+			{# <a class="btn btn--main" href="{% url 'predict_sgpa_cgpa' %}">
+				<svg
+					version="1.1"
+					xmlns="http://www.w3.org/2000/svg"
+					width="32"
+					height="32"
+					viewBox="0 0 32 32"
+				>
+					<title></title>
+					<path
+						d="M1.057 0.943h1.885v14.115h22.26l-4.646 4.646 1.06 1.06 6.352-6.352c0.391-0.391 0.391-1.023 0-1.414l-6.352-6.352-1.06 1.06 4.646 4.646h-22.26v-14.115z"
+					></path>
+				</svg>
+				Predict GPA
+			</a> #}
 			</div>
 
 			{% include 'mainapp/feed_component.html' %}
