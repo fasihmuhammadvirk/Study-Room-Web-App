@@ -94,9 +94,14 @@
 					<div class="room__details">
 						{{room.description |truncatechars:300 }}
 					</div>
-					{% if request.user == room.host %}
-					<a class = "room__topics" style= "background-color: #71c6dd; color:#2d2d39 " href="{% url 'accept_join_requests' room.id %}">Accept Join Requests</a>
-				{% endif %}
+					{% if request.user == room.host and room.is_private %}
+					<a class="room__topics" style="background-color: #71c6dd; color:#2d2d39; position: relative;" href="{% url 'accept_join_requests' room.id %}">
+						Accept Join Requests
+						{% if pending_requests_count > 0 %}
+							<span style="background: red; color: white; border-radius: 50%; padding: 2px 6px; font-size: 10px; position: absolute; top: -5px; right: -5px;">{{ pending_requests_count }}</span>
+						{% endif %}
+					</a>
+					{% endif %}
 					<span class="room__topics">{{room.topic}}</span>
 				</div>
 				<div class="room__conversation">

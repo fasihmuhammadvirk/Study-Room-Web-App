@@ -181,9 +181,14 @@ def room(request, pk):
         room.participants.add(request.user)
         return redirect('room', pk=room.id)
 
+    pending_requests_count = 0
+    if room.is_private and request.user == room.host:
+        pending_requests_count = JoinRequest.objects.filter(room=room, status='pending').count()
+
     context = {'room': room,
                'room_messages': room_messages,
-               'participants': participants}
+               'participants': participants,
+               'pending_requests_count': pending_requests_count}
     return render(request, 'mainapp/room.html', context)
 
 
