@@ -1,7 +1,9 @@
 from .forms import RoomForm
 from .models import Room, Topic
 from django.shortcuts import render, redirect
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
+from django.views.decorators.csrf import csrf_exempt
+import json
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.db.models import Q
@@ -383,3 +385,55 @@ def predict_sgpa_cgpa(request):
         return render(request, 'mainapp/prediction_form.html', context)
     else:
         return render(request, 'mainapp/prediction_form.html')
+
+
+@csrf_exempt
+@login_required(login_url='login')
+def chatbot_api(request):
+    """API endpoint for the Gemini AI study assistant chatbot."""
+    if request.method != 'POST':
+        return JsonResponse({'error': 'Method not allowed'}, status=405)
+
+    try:
+        import google.generativeai as genai  # noqa: PLC0415
+        from django.conf import settings as django_settings  # noqa: PLC0415
+
+        data = json.loads(request.body)
+        user_message = data.get('message', '').strip()
+        history = data.get('history', [])
+
+        if not user_message:
+            return JsonResponse({'error': 'Empty message'}, status=400)
+
+        api_key = django_settings.GEMINI_API_KEY
+        if not api_key or api_key == 'YOUR_GEMINI_API_KEY_HERE':
+            return JsonResponse({'error': 'Gemini API key not configured. Please add your key in settings.py.'}, status=500)
+
+        genai.configure(api_key=api_key)
+        model = genai.GenerativeModel(
+            model_name='gemini-2.5-flash',
+            system_instruction=(
+                'You are StudyBot, a concise AI study assistant for StudyBuddy — a platform where students collaborate in study rooms. '
+                'Keep every reply short, clear, and helpful (2-4 sentences max). '
+                'Use bullet points for lists. '
+                'Focus on study-related help: concepts, problem-solving, study tips, and academic resources. '
+                'Be friendly but direct — no lengthy preambles or overly detailed explanations.'
+            )
+        )
+
+        # Build chat history for multi-turn conversation
+        chat_history = []
+        for msg in history:
+            role = 'user' if msg.get('role') == 'user' else 'model'
+            chat_history.append({'role': role, 'parts': [msg.get('content', '')]})
+
+        chat = model.start_chat(history=chat_history)
+        response = chat.send_message(user_message)
+        reply = response.text
+
+        return JsonResponse({'reply': reply})
+
+    except json.JSONDecodeError:
+        return JsonResponse({'error': 'Invalid JSON'}, status=400)
+    except Exception as e:
+        return JsonResponse({'error': str(e)}, status=500)

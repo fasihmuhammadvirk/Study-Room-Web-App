@@ -23,5 +23,71 @@
     
     {% endblock %}
     <script src="{% static 'js/script.js' %}"></script>
+
+    {% if request.user.is_authenticated %}
+    <!-- ===== StudyBot Chatbot Widget ===== -->
+    <div id="studybot-widget">
+
+      <!-- Floating trigger button -->
+      <button id="studybot-toggle" aria-label="Open StudyBot">
+        <span id="studybot-icon-open">
+          <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M12 2C6.477 2 2 6.149 2 11.25c0 2.42 1.037 4.617 2.724 6.248L3.5 21.5l4.349-1.687A10.6 10.6 0 0012 20.5c5.523 0 10-4.149 10-9.25S17.523 2 12 2z" fill="currentColor"/>
+            <circle cx="8.5" cy="11.5" r="1.2" fill="white"/>
+            <circle cx="12" cy="11.5" r="1.2" fill="white"/>
+            <circle cx="15.5" cy="11.5" r="1.2" fill="white"/>
+          </svg>
+        </span>
+        <span id="studybot-icon-close" style="display:none;">
+          <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M18 6L6 18M6 6l12 12" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/>
+          </svg>
+        </span>
+      </button>
+
+      <!-- Chat panel -->
+      <div id="studybot-panel" class="studybot-hidden">
+        <div id="studybot-header">
+          <div id="studybot-header-info">
+            <div id="studybot-avatar">
+              <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M12 2C6.477 2 2 6.149 2 11.25c0 2.42 1.037 4.617 2.724 6.248L3.5 21.5l4.349-1.687A10.6 10.6 0 0012 20.5c5.523 0 10-4.149 10-9.25S17.523 2 12 2z" fill="currentColor"/>
+                <circle cx="8.5" cy="11.5" r="1.2" fill="white"/>
+                <circle cx="12" cy="11.5" r="1.2" fill="white"/>
+                <circle cx="15.5" cy="11.5" r="1.2" fill="white"/>
+              </svg>
+            </div>
+            <div>
+              <p id="studybot-name">StudyBot</p>
+              <p id="studybot-status"><span class="studybot-dot"></span>Powered by Gemini</p>
+            </div>
+          </div>
+          <button id="studybot-clear" title="Clear chat">&#x1F5D1;</button>
+        </div>
+
+        <div id="studybot-messages">
+          <div class="studybot-msg studybot-msg--bot">
+            <div class="studybot-bubble">
+              👋 Hi! I'm <strong>StudyBot</strong>. Ask me anything — concepts, tips, problems, resources.
+            </div>
+          </div>
+        </div>
+
+        <div id="studybot-input-area">
+          <textarea id="studybot-input" placeholder="Ask anything..." rows="1"></textarea>
+          <button id="studybot-send" aria-label="Send">
+            <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M22 2L11 13" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M22 2L15 22L11 13L2 9L22 2Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </button>
+        </div>
+      </div>
+
+    </div>
+    <!-- ===== End StudyBot ===== -->
+
+    <script src="{% static 'js/chatbot.js' %}"></script>
+    {% endif %}
   </body>
 </html>

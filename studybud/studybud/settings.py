@@ -152,3 +152,6 @@ CORS_ALLOW_ALL_ORIGINS = True
 
 
 # Email Settings
+
+# Gemini AI Chatbot
+GEMINI_API_KEY = 'AIzaSyBvLzl0sOe4928jpYo52gz4OLrK_fLg-aI'

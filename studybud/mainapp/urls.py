@@ -28,4 +28,6 @@ urlpatterns = [
     
     path('room/<int:pk>/request/', views.request_join_room, name='request_join_room'),
     path('room/<int:pk>/accept/', views.accept_join_requests, name='accept_join_requests'),
+
+    path('api/chat/', views.chatbot_api, name='chatbot_api'),
 ]

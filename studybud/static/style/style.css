@@ -1267,3 +1267,340 @@ a {
 .room__message > form > input[type="file"]:not(:focus) + label {
 	cursor: pointer;}
 
+
+/* ================================================
+   StudyBot Chatbot Widget
+   ================================================ */
+
+/* Container keeps everything in the lower-left */
+#studybot-widget {
+  position: fixed;
+  bottom: 2.4rem;
+  left: 2.4rem;
+  z-index: 9999;
+  display: flex;
+  flex-direction: column-reverse;
+  align-items: flex-start;
+  gap: 1.2rem;
+}
+
+/* ---- Toggle button ---- */
+#studybot-toggle {
+  width: 5.4rem;
+  height: 5.4rem;
+  border-radius: 50%;
+  border: none;
+  cursor: pointer;
+  background: linear-gradient(135deg, #71c6dd 0%, #4fa8c5 100%);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 18px rgba(113, 198, 221, 0.45);
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+  flex-shrink: 0;
+}
+
+#studybot-toggle:hover {
+  transform: scale(1.1);
+  box-shadow: 0 6px 24px rgba(113, 198, 221, 0.6);
+}
+
+#studybot-toggle svg {
+  width: 2.6rem;
+  height: 2.6rem;
+}
+
+/* ---- Chat panel ---- */
+#studybot-panel {
+  width: 32rem;
+  max-height: 48rem;
+  background: var(--color-dark);
+  border-radius: 1.6rem;
+  box-shadow: 0 8px 40px rgba(0, 0, 0, 0.45);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  border: 1px solid var(--color-dark-medium);
+  animation: studybot-slide-up 0.3s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+}
+
+@keyframes studybot-slide-up {
+  from {
+    opacity: 0;
+    transform: translateY(1.5rem) scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+#studybot-panel.studybot-hidden {
+  display: none;
+}
+
+/* ---- Header ---- */
+#studybot-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1.2rem 1.4rem;
+  background: linear-gradient(90deg, #3f6e78 0%, #2d5663 100%);
+  border-bottom: 1px solid rgba(255,255,255,0.07);
+}
+
+#studybot-header-info {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+#studybot-avatar {
+  width: 3.4rem;
+  height: 3.4rem;
+  border-radius: 50%;
+  background: rgba(113, 198, 221, 0.25);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  color: #71c6dd;
+}
+
+#studybot-avatar svg {
+  width: 2rem;
+  height: 2rem;
+}
+
+#studybot-name {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #e5e5e5;
+  line-height: 1.2;
+}
+
+#studybot-status {
+  font-size: 1.1rem;
+  color: #8bc8d4;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  line-height: 1.2;
+}
+
+.studybot-dot {
+  display: inline-block;
+  width: 0.7rem;
+  height: 0.7rem;
+  border-radius: 50%;
+  background: #5dd693;
+  animation: studybot-pulse 2s infinite;
+}
+
+@keyframes studybot-pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.4; }
+}
+
+#studybot-clear {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  font-size: 1.6rem;
+  color: #8b8b8b;
+  transition: color 0.2s;
+  padding: 0.3rem;
+  line-height: 1;
+}
+
+#studybot-clear:hover {
+  color: var(--color-error);
+}
+
+/* ---- Messages area ---- */
+#studybot-messages {
+  flex: 1;
+  overflow-y: auto;
+  padding: 1.4rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-dark-medium) transparent;
+}
+
+#studybot-messages::-webkit-scrollbar {
+  width: 0.4rem;
+}
+
+#studybot-messages::-webkit-scrollbar-thumb {
+  background: var(--color-dark-medium);
+  border-radius: 1rem;
+}
+
+/* ---- Message rows ---- */
+.studybot-msg {
+  display: flex;
+  animation: studybot-msg-in 0.2s ease both;
+}
+
+@keyframes studybot-msg-in {
+  from { opacity: 0; transform: translateY(6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.studybot-msg--user {
+  justify-content: flex-end;
+}
+
+.studybot-msg--bot {
+  justify-content: flex-start;
+}
+
+/* ---- Bubbles ---- */
+.studybot-bubble {
+  max-width: 80%;
+  padding: 0.9rem 1.3rem;
+  border-radius: 1.4rem;
+  font-size: 1.35rem;
+  line-height: 1.55;
+  word-break: break-word;
+}
+
+.studybot-msg--user .studybot-bubble {
+  background: linear-gradient(135deg, #71c6dd, #4fa8c5);
+  color: #1a2e35;
+  border-bottom-right-radius: 0.3rem;
+  font-weight: 500;
+}
+
+.studybot-msg--bot .studybot-bubble {
+  background: var(--color-dark-medium);
+  color: var(--color-light-gray);
+  border-bottom-left-radius: 0.3rem;
+}
+
+.studybot-bubble strong {
+  color: var(--color-light);
+}
+
+.studybot-bubble code {
+  font-family: 'Courier New', monospace;
+  background: rgba(0,0,0,0.25);
+  padding: 0.1em 0.4em;
+  border-radius: 0.3rem;
+  font-size: 1.25rem;
+  color: #71c6dd;
+}
+
+.studybot-bubble ul {
+  margin: 0.5rem 0 0 1.4rem;
+  padding: 0;
+}
+
+.studybot-bubble li {
+  margin-bottom: 0.3rem;
+}
+
+/* ---- Typing indicator ---- */
+.studybot-typing-indicator {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 1rem 1.4rem;
+}
+
+.studybot-typing-indicator span {
+  display: inline-block;
+  width: 0.7rem;
+  height: 0.7rem;
+  border-radius: 50%;
+  background: var(--color-main);
+  animation: studybot-bounce 1.2s infinite;
+}
+
+.studybot-typing-indicator span:nth-child(2) { animation-delay: 0.2s; }
+.studybot-typing-indicator span:nth-child(3) { animation-delay: 0.4s; }
+
+@keyframes studybot-bounce {
+  0%, 60%, 100% { transform: translateY(0); opacity: 0.6; }
+  30%            { transform: translateY(-0.6rem); opacity: 1; }
+}
+
+/* ---- Input area ---- */
+#studybot-input-area {
+  display: flex;
+  align-items: flex-end;
+  gap: 0.8rem;
+  padding: 1rem 1.2rem;
+  border-top: 1px solid var(--color-dark-medium);
+  background: var(--color-dark);
+}
+
+#studybot-input {
+  flex: 1;
+  background: var(--color-bg);
+  border: 1px solid var(--color-dark-medium);
+  border-radius: 1rem;
+  padding: 0.8rem 1.2rem;
+  color: var(--color-light);
+  font-size: 1.35rem;
+  resize: none;
+  outline: none;
+  max-height: 10rem;
+  line-height: 1.5;
+  transition: border-color 0.2s;
+  font-family: inherit;
+}
+
+#studybot-input::placeholder {
+  color: var(--color-gray);
+}
+
+#studybot-input:focus {
+  border-color: var(--color-main);
+}
+
+#studybot-send {
+  width: 3.6rem;
+  height: 3.6rem;
+  border-radius: 50%;
+  border: none;
+  background: linear-gradient(135deg, #71c6dd 0%, #4fa8c5 100%);
+  color: #fff;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: transform 0.2s, opacity 0.2s;
+}
+
+#studybot-send:hover {
+  transform: scale(1.1);
+}
+
+#studybot-send:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+}
+
+#studybot-send svg {
+  width: 1.6rem;
+  height: 1.6rem;
+}
+
+/* ---- Responsive tweak ---- */
+@media screen and (max-width: 400px) {
+  #studybot-widget {
+    left: 1rem;
+    bottom: 1rem;
+  }
+  #studybot-panel {
+    width: calc(100vw - 2rem);
+  }
+}
+
+
