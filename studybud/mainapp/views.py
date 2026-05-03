@@ -395,8 +395,9 @@ def chatbot_api(request):
         return JsonResponse({'error': 'Method not allowed'}, status=405)
 
     try:
-        import google.generativeai as genai  # noqa: PLC0415
         from django.conf import settings as django_settings  # noqa: PLC0415
+        import urllib.request
+        import urllib.error
 
         data = json.loads(request.body)
         user_message = data.get('message', '').strip()
@@ -409,29 +410,51 @@ def chatbot_api(request):
         if not api_key or api_key == 'YOUR_GEMINI_API_KEY_HERE':
             return JsonResponse({'error': 'Gemini API key not configured. Please add your key in settings.py.'}, status=500)
 
-        genai.configure(api_key=api_key)
-        model = genai.GenerativeModel(
-            model_name='gemini-2.5-flash',
-            system_instruction=(
-                'You are StudyBot, a concise AI study assistant for StudyBuddy — a platform where students collaborate in study rooms. '
-                'Keep every reply short, clear, and helpful (2-4 sentences max). '
-                'Use bullet points for lists. '
-                'Focus on study-related help: concepts, problem-solving, study tips, and academic resources. '
-                'Be friendly but direct — no lengthy preambles or overly detailed explanations.'
-            )
-        )
+        api_url = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key={api_key}"
 
-        # Build chat history for multi-turn conversation
-        chat_history = []
+        # Build contents array for multi-turn conversation
+        contents = []
         for msg in history:
             role = 'user' if msg.get('role') == 'user' else 'model'
-            chat_history.append({'role': role, 'parts': [msg.get('content', '')]})
+            contents.append({'role': role, 'parts': [{'text': msg.get('content', '')}]})
+        
+        # Add the current user message
+        contents.append({'role': 'user', 'parts': [{'text': user_message}]})
 
-        chat = model.start_chat(history=chat_history)
-        response = chat.send_message(user_message)
-        reply = response.text
+        payload = {
+            "systemInstruction": {
+                "parts": [{"text": (
+                    'You are StudyBot, a concise AI study assistant for StudyBuddy — a platform where students collaborate in study rooms. '
+                    'Keep every reply short, clear, and helpful (2-4 sentences max). '
+                    'Use bullet points for lists. '
+                    'Focus on study-related help: concepts, problem-solving, study tips, and academic resources. '
+                    'Be friendly but direct — no lengthy preambles or overly detailed explanations.'
+                )}]
+            },
+            "contents": contents
+        }
 
-        return JsonResponse({'reply': reply})
+        req = urllib.request.Request(
+            api_url, 
+            data=json.dumps(payload).encode('utf-8'),
+            headers={'Content-Type': 'application/json'},
+            method='POST'
+        )
+
+        try:
+            with urllib.request.urlopen(req) as response:
+                response_data = json.loads(response.read().decode('utf-8'))
+                reply = response_data.get('candidates', [{}])[0].get('content', {}).get('parts', [{}])[0].get('text', '')
+                if not reply:
+                    return JsonResponse({'error': 'No response generated'}, status=500)
+                return JsonResponse({'reply': reply})
+        except urllib.error.HTTPError as e:
+            try:
+                error_body = json.loads(e.read().decode('utf-8'))
+                err_msg = error_body.get('error', {}).get('message', str(e))
+            except:
+                err_msg = str(e)
+            return JsonResponse({'error': f"API Error: {err_msg}"}, status=500)
 
     except json.JSONDecodeError:
         return JsonResponse({'error': 'Invalid JSON'}, status=400)

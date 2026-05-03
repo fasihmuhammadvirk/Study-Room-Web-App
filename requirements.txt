@@ -1,3 +1,2 @@
 Django==4.2.3
 Pillow>=10.0.0
-google-generativeai>=0.8.0
